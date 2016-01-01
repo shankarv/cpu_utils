@@ -1,3 +1,13 @@
+/*****************************************************************
+ * Calculate the PState P0 frequency of current Intel/AMD 64-bit
+ * processors using RDTSCP 
+ * This works for CPUs that support rdtscp and constant_tsc flags
+ * in CPUID (see /proc/cpuinfo in Linux)
+ *
+ * Author: Shankar Viswanathan
+ *
+ ****************************************************************/
+
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
@@ -6,6 +16,8 @@
 typedef unsigned long long int 	uint64_t;
 uint64_t get_rdtscp(void);
 
+// Call RDTSCP instruction as inline assembly
+// Return 64-bit counter value
 inline uint64_t get_rdtscp(void) {
   unsigned int lo, hi;
   asm volatile (
@@ -40,6 +52,7 @@ int main(int argc, char* argv[]) {
     printf("Time Delta %d seconds =  %llu ticks. Ticks per second = %llu\n", sl_time, delta, (uint64_t) delta/sl_time);
   } else {
     printf("sleep() function returned %d\n", sl_ret);
+    exit(-1);
   }
 
   exit(0);
