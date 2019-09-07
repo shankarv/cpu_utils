@@ -23,20 +23,20 @@ static void __exit hello_exit(void)
 
 static void print_msrs(void)
 {
-	unsigned int long long msr_val = 0;
+    unsigned int long long msr_val = 0;
     int msr_num[8] = { MSR_K7_HWCR, MSR_K8_SYSCFG, MSR_K8_TOP_MEM1, \
                        MSR_K8_TOP_MEM2, MSR_AMD64_NB_CFG, MSR_IA32_CR_PAT, \
                        MSR_IA32_LASTBRANCHFROMIP, MSR_IA32_LASTBRANCHTOIP };
     int i;    
+
     for (i = 0; i < 8; i++) 
     {
         rdmsrl(msr_num[i], msr_val);
         printk(KERN_INFO "MSR 0x%x: 0x%llx\n", msr_num[i], msr_val);
     }
     
-    unsigned int rdtsc_aux;
-    rdtscpll(msr_val, rdtsc_aux);
-    printk(KERN_INFO "RDTSCP: 0x%0llx 0x%0x\n", msr_val, rdtsc_aux);
+    msr_val = rdtsc();
+    printk(KERN_INFO "RDTSCP: 0x%0llx\n", msr_val);
 }
 
 module_init(hello_init);
